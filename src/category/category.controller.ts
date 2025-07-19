@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -10,6 +10,11 @@ export class CategoryController {
   @Get()
   findAll() {
     return this.categoryService.findAll();
+  }
+
+  @Get('all')
+  findAllIncludingInactive() {
+    return this.categoryService.findAllIncludingInactive();
   }
 
   @Get(':id')
@@ -28,7 +33,13 @@ export class CategoryController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   remove(@Param('id') id: string) {
     return this.categoryService.remove(+id);
+  }
+
+  @Patch(':id/restore')
+  restore(@Param('id') id: string) {
+    return this.categoryService.restore(+id);
   }
 }
